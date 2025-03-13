@@ -1,0 +1,4 @@
+optimum
+transformers
+huggingface_hub[cli]
+sentencepiece
