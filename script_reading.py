@@ -12,7 +12,7 @@ def read_from_ssh():
     username = "mingzhul"
     password = "<P$$Cu;{2xD$#l,qh(:3k+8`:"  # Consider using SSH keys for better security
     remote_file_path = "16785-project/script.txt"
-    local_file_path = "local_file.txt"
+    local_file_path = "script.txt"
 
     try:
         # Create an SSH client instance
