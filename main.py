@@ -11,7 +11,7 @@ import streamlit as st
 
 
 def generate_text(messages):
-    pipe = pipeline("text-generation", model="Qwen/Qwen2.5-7B-Instruct", device='cpu')
+    pipe = pipeline("text-generation", model="Qwen/Qwen2.5-7B-Instruct", device='auto')
     print(messages)
     print(pipe(messages))
     return pipe(messages)[0]['generated_text'][1]['content']
