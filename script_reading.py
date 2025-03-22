@@ -56,6 +56,8 @@ read_from_ssh()
 with open("script.txt", "r") as file:
     reply = file.readlines()
 
+# print(reply)
+
 emotion = reply[1]
 reply = reply[0]
 
