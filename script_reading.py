@@ -76,4 +76,5 @@ else:
     face.express(ExpressionPresets.default, 1000)
 
 face.say(reply)
+face.wait()
 
