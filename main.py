@@ -1,5 +1,4 @@
 import os
-os.environ['HF_HOME'] = '/home/scratch/mingzhul/.cache/huggingface'
 
 import torch
 from transformers import pipeline
@@ -8,19 +7,13 @@ import streamlit as st
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 
-
-
 if 'messages' not in st.session_state:
-    st.session_state.messages = []
+    st.session_state.messages = [
+        {"role": "assistant",
+         "content": "I am a human therapist. I want to be concise and empathetic. Don't list things. Be a good listener. "}]
 if 'pipe_generate' not in st.session_state:
-    # st.session_state.model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-7B-Instruct")
-    # st.session_state.pipe_generate = pipeline("text-generation", st.session_state.model, 
-    st.session_state.pipe_generate = pipeline("text-generation", model="Qwen/Qwen2.5-7B-Instruct", 
+    st.session_state.pipe_generate = pipeline("text-generation", model="Qwen/Qwen2.5-7B-Instruct",
                                               device_map='auto', max_length=512)
-    # st.session_state.pipe_classify = pipeline("text-classification", model="Qwen/Qwen2.5-7B-Instruct", 
-    #                                           device_map='auto', max_length=512)
-
-
 
 
 text = st.text_input("text", )
@@ -29,21 +22,18 @@ text = st.text_input("text", )
 if st.button("speak"):
     st.session_state.messages.append({"role": "user", "content": text})
 
-    # tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-7B-Instruct")
-    # pipe = pipeline("text-generation", st.session_state.model, tokenizer=tokenizer,
-                    # device_map='auto', max_length=512)
-    reply = st.session_state.pipe_generate(st.session_state.messages)
-    # reply = pipe(st.session_state.messages)
+    reply = st.session_state.pipe_generate(
+        st.session_state.messages, max_length=1024)
     print(reply)
     reply = reply[-1]['generated_text'][-1]['content']
-    st.session_state.messages.append({"role": "robot", "content": reply})
-    
-    # st.session_state.model.to('cpu')
-    
+    st.session_state.messages.append({"role": "assistant", "content": reply})
+
     emotion = st.session_state.pipe_generate(
-        [{"role": "user", "content": 
-            "classify this message and do not explain, is it happy, sad, surprise, fear, angry, or disgust: " + reply}]
-                                             )[-1]['generated_text'][-1]['content']
+        [{"role": "user", "content":
+            "classify this message and do not explain, is it happy, sad, surprise, fear, angry, or disgust: " + reply}],
+        max_length=1024
+    )[-1]['generated_text'][-1]['content']
+
     print(emotion)
     if 'happy' in emotion:
         emotion = 'happy'
@@ -66,4 +56,3 @@ if st.button("speak"):
         file.write("\n")
         file.write(emotion)
         file.write("\n")
-

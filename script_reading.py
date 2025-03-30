@@ -3,7 +3,6 @@ from pylips.face import FacePresets
 from pylips.face import ExpressionPresets
 
 
-
 # read the script
 with open("script.txt", "r") as file:
     reply = file.readlines()
@@ -31,4 +30,3 @@ else:
 
 face.say(reply)
 face.wait()
-
